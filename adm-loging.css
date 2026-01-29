@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-   background-image: url('../imagenes/imagenesfondoidiomas.jpg'); /* Imagen de fondo */
+   background-image: url('./imagenesfondoidiomas.jpg'); /* Imagen de fondo */
     background-size: cover; /* Asegura que la imagen cubra todo el fondo */
     background-position: center center; /* Centra la imagen */
     background-attachment: fixed; /* Hace que la imagen de fondo se quede fija al hacer scroll */
