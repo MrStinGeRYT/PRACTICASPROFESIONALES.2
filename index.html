@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Listado de Practicas Profesionales</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../css/MenuPrincipal.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="banner-contenedor">
+    <div class="banner">
+      <img src="../imagenes/logo_.png" alt="Logo Izquierda" class="logo-izquierda">
+      <img src="../imagenes/logo_admin_white.png" alt="Logo Derecha" class="logo-derecha">
+    </div>
+    <div class="estandarte">PRACTICAS PROFESIONALES</div>
+  </div>
+
+  <!-- 🔹 Burbuja que se expande en menú -->
+  <div id="menu-expandible" class="menu-expandible">
+    <div class="icono-menu">☰</div>
+
+    <div class="contenido-menu">
+      <h3>Opciones del Sistema</h3>
+      <div class="botones-opciones">
+        <div class="opcion" style="text-align: center;">
+          <p><strong>Accesos</strong></p>
+          <p>Sistema Institucional de Seguimiento de Práctica Profesional</p>
+          <a href="https://robalo.unacar.mx/sispprof/Default.aspx"
+             class="btn-amarillo" target="_blank">Click aquí</a>
+        </div>
+
+        <div class="opcion" style="text-align: center;">
+  <p><strong>Guía para realizar tus practicas profecionales</strong></p>
+  <p>PDF</p>
+
+  <a href="../doc/GUIAPP.pdf"
+     class="btn-amarillo"
+     download="GUIAPP.pdf">
+    Descargar PDF
+  </a>
+</div>
+
+<div class="opcion" style="text-align: center;">
+  <p><strong>Formato para el plan de trabajo</strong></p>
+  <p>PDF</p>
+
+  <a href="../doc/Plan de trabajo.docx"
+     class="btn-amarillo"
+     download="Plan_de_trabajo.pdf">
+    Descargar PDF
+  </a>
+</div>
+
+
+
+        <div class="opcion" style="text-align: center;">
+          <p><strong>Acceso administrador</strong></p>
+          <a href="adm-loging.html" class="btn-amarillo">Ingresar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const menu = document.getElementById("menu-expandible");
+
+      menu.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menu.classList.toggle("activo");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!menu.contains(e.target)) {
+          menu.classList.remove("activo");
+        }
+      });
+
+      menu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+          setTimeout(() => menu.classList.remove("activo"), 300);
+        });
+      });
+    });
+  </script>
+
+  <!-- Contenedor principal -->
+  <div class="formulario-contenedor">
+    <h2 class="text-center">Listado de empresas</h2>
+
+    <form id="form-busqueda"
+          style="display:flex; flex-direction:column; gap:6px; min-width:300px; flex-grow:1; max-width:500px;">
+
+      <label for="busqueda" style="font-weight: 600; font-size: 1.6rem;">
+        Buscar empresa (por nombre):
+      </label>
+
+      <div style="display:flex; gap:8px; width:100%; align-items:stretch;">
+        <input
+          type="text"
+          id="busqueda"
+          class="form-control"
+          placeholder="Ej. ANCABE o UNACAR"
+          autocomplete="off"
+          style="
+            flex-grow: 1;
+            padding: 8px 12px;
+            font-size: 1.4rem;
+            border-radius: 6px 0 0 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            min-width: 180px;
+            height: 42px;
+          "
+        />
+
+        <button
+          type="button"
+          id="btnBuscar"
+          style="
+            padding: 8px 20px;
+            font-size: 1.4rem;
+            border-radius: 0 6px 6px 0;
+            border: 1px solid #007bff;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            height: 42px;
+            white-space: nowrap;
+            transition: background-color 0.3s ease;
+          "
+        >Buscar</button>
+      </div>
+
+      <div id="estado-tabla" style="display:none; margin-top:6px; font-size:1.3rem;"></div>
+    </form>
+
+    <div class="table-responsive" style="margin-top: 10px;">
+      <table class="table table-bordered table-hover" id="tabla-registros">
+        <thead>
+          <tr>
+            <th>NOMBRE</th>
+            <th>DIRECCION</th>
+            <th>TELEFONO</th>
+            <th>NOMBRE_CARTA</th>
+            <th>PUESTO_CARTA</th>
+            <th>CORREO_CONT</th>
+            <th>PROGRAMA EDUCATIVO SOLICITADO</th>
+            <th>GIRO DE LA EMPRESA</th>
+          </tr>
+        </thead>
+
+        <tbody id="contenido-tabla"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ Banner inferior (AHORA sí va al final) -->
+  <footer class="banner-inferior">
+    <div class="banner-inferior-texto">
+      <div>Universidad Autónoma del Carmen</div>
+      <div>Dirección General de Servicios al Estudiante</div>
+      <div>Unidad de Gestión Estudiantil</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-config.js"></script>
+<script src="../js/empresas.js"></script>
+</body>
+</html>

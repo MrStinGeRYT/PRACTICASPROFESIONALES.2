@@ -1,0 +1,424 @@
+/* =========================
+   Fondo general
+========================= */
+body {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+
+  /* ✅ Ruta corregida: el CSS está en /css y las imágenes en /imagenes */
+  background-image: url('../imagenes/imagenesfondoidiomas.jpg');
+
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+/* ✅ NUEVO: evita espacios y deja estandarte pegado al banner */
+.banner-contenedor {
+  margin: 0;
+  padding: 0;
+  line-height: 0; /* quita “huecos” por espacios/inline */
+}
+
+/* =========================
+   Banner
+========================= */
+.banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 10px 20px;
+  position: relative;
+  z-index: 10;
+  margin: 0;
+  line-height: normal; /* restaura dentro del banner */
+}
+
+.logo-izquierda {
+  width: 300px;
+  height: auto;
+  margin-left: 6px;
+  z-index: 5;
+}
+
+.logo-derecha {
+  width: 100px;
+  height: auto;
+  z-index: 5;
+}
+
+/* =========================
+   Estandarte
+========================= */
+.estandarte {
+  position: relative;
+  width: 80px;
+  height: 350px;
+  background-color: yellow;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  font-weight: bold;
+  font-size: 22px;
+  color: #000;
+  z-index: 10;
+  white-space: nowrap;
+  padding: 0 10px;
+  overflow: hidden;
+
+  /* ✅ NUEVO: súbelo para que quede parejo con el banner */
+  margin: 0;
+  margin-top: -1px; /* ajusta: -6 / -8 / -12 si lo quieres más exacto */
+  line-height: normal;
+}
+
+/* =========================
+   Burbuja / Menú expandible
+========================= */
+.menu-expandible {
+  position: fixed;
+  top: 150px;
+  right: 40px;
+  width: 65px;
+  height: 65px;
+  background-color: #ffc107;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: all 0.4s ease-in-out;
+  overflow: hidden;
+}
+
+/* Icono ☰ */
+.icono-menu {
+  position: absolute;
+  color: #000;
+  font-size: 28px;
+  font-weight: bold;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Estado expandido */
+.menu-expandible.activo {
+  width: 350px;
+  height: 600px;
+  border-radius: 20px;
+  background: rgb(54, 54, 54, 0.50);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.menu-expandible.activo .icono-menu {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/* Contenido del menú */
+.menu-expandible .contenido-menu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  width: 100%;
+}
+
+.menu-expandible.activo .contenido-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Título / texto */
+.menu-expandible h3 {
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.menu-expandible p {
+  color: #fff;
+}
+
+/* Layout de botones */
+.botones-opciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.opcion p {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+/* Botón amarillo */
+.btn-amarillo {
+  background-color: #ffc107;
+  border: none;
+  color: #000;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-amarillo:hover {
+  background-color: #ffda44;
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-expandible {
+    right: 15px;
+    top: 140px;
+  }
+
+  .menu-expandible.activo {
+    width: 92vw;
+    height: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .logo-izquierda {
+    width: 220px;
+    margin-left: 10px;
+  }
+
+  .logo-derecha {
+    width: 80px;
+  }
+
+  /* ✅ Opcional: en móvil no lo subas tanto */
+  .estandarte {
+    margin-top: -6px;
+  }
+}
+/* ✅ Para que el footer no tape contenido (reserva espacio abajo) */
+body{
+  padding-bottom: 90px; /* ajusta si haces el footer más alto */
+}
+
+/* =========================
+   Banner inferior (footer)
+========================= */
+.banner-inferior{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  z-index: 999;
+  border-top: 2px solid rgba(255,255,255,0.15);
+  padding: 10px 20px;
+}
+
+.banner-inferior-texto{
+  max-width: 1100px;
+  margin: 0 auto;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.25;
+
+  /* ✅ CENTRADO */
+  text-align: center;
+}
+
+.banner-inferior-texto div{
+  margin: 0;
+}
+
+/* ✅ Reserva espacio abajo para que no lo tape */
+body{
+  padding-bottom: 90px;
+}
+
+@media (max-width: 768px){
+  body{
+    padding-bottom: 110px;
+  }
+}
+
+.formulario-contenedor {
+  background-color: rgba(50, 50, 50, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 30px;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 20px;
+  position: relative;
+  top: -300px;
+  z-index: 1;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #FFD700;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 17px;
+  box-sizing: border-box;
+  color: #333;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  margin-top: 5px;
+}
+
+thead {
+  background-color: #fdf900;
+  color: #000;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+tbody {
+  background-color: white;
+  color: black;
+}
+
+th:nth-child(5),
+td:nth-child(5),
+th:nth-child(1),
+td:nth-child(1) {
+  white-space: nowrap;
+  text-align: left;
+  padding: 5px 8px;
+  width: 1%;
+  max-width: 1%;
+  overflow: visible;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  width: 10%;
+  max-width: 10%;
+}
+
+/* Título */
+h2.text-center {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  color: #FFD700;
+  font-size: 5rem;
+  font-weight: 700;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Campo búsqueda */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 400px;
+  color: #000;
+  margin-top: 15px;
+  flex-grow: 1;
+  min-width: 250px;
+}
+
+.input-boton {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+.input-boton input.form-control {
+  flex-grow: 1;
+  border-radius: 6px 0 0 6px;
+  border-right: none;
+  height: 42px;
+  padding: 8px 12px;
+  font-size: 1.4rem;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.input-boton button {
+  border-radius: 0 6px 6px 0;
+  border: 1px solid #007bff;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  height: 42px;
+  padding: 8px 20px;
+  font-size: 1.4rem;
+  transition: background-color 0.3s ease;
+}
+
+.input-boton button:hover {
+  background-color: #0056b3;
+}
+
+/* Tabla ajustada */
+.tabla-o-contenido {
+  margin-top: 0px;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
