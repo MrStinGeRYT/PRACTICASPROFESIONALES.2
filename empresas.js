@@ -13,7 +13,7 @@
 
   // ====== Config por defecto (ajusta si tu tabla se llama distinto) ======
   const DEFAULT_TABLE = "empresas";
-  const DEFAULT_LIMIT = 200;
+  const DEFAULT_LIMIT = 350;
 
   // Candidatos por si tus columnas están en minúsculas o MAYÚSCULAS (o con underscores)
   const FIELD_CANDIDATES = {
