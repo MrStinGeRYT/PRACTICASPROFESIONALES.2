@@ -1,6 +1,7 @@
 /* empresas.js
    - Llena la tabla desde Supabase
    - Búsqueda SOLO por nombre
+   - Paginación (200 por página) + botón "Cargar más"
    - Compatible con tu HTML (IDs: form-busqueda, busqueda, btnBuscar, estado-tabla, contenido-tabla)
    - Lee credenciales desde supabase-config.js:
        window.SUPABASE_URL
@@ -11,9 +12,15 @@
 (() => {
   "use strict";
 
-  // ====== Config por defecto (ajusta si tu tabla se llama distinto) ======
+  // ====== Config por defecto ======
   const DEFAULT_TABLE = "empresas";
-  const DEFAULT_LIMIT = 350;
+
+  // ✅ Paginación
+  const PAGE_SIZE = 200;
+  let page = 0;
+  let lastTerm = "";
+  let totalCount = null;
+  let detectedNameCol = null;
 
   // Candidatos por si tus columnas están en minúsculas o MAYÚSCULAS (o con underscores)
   const FIELD_CANDIDATES = {
@@ -29,14 +36,9 @@
       "programa",
       "PROGRAMA",
       "programa_educativo",
-      "PROGRAMA_EDUCATIVO"
+      "PROGRAMA_EDUCATIVO",
     ],
-    giro: [
-      "giro_de_la_empresa",
-      "GIRO_DE_LA_EMPRESA",
-      "giro",
-      "GIRO"
-    ],
+    giro: ["giro_de_la_empresa", "GIRO_DE_LA_EMPRESA", "giro", "GIRO"],
   };
 
   // ====== Helpers UI ======
@@ -64,7 +66,6 @@
     el.style.display = "block";
     el.textContent = msg;
 
-    // Colores suaves (no afecta tu CSS global)
     if (kind === "error") el.style.color = "#b00020";
     else if (kind === "ok") el.style.color = "#1b5e20";
     else el.style.color = "#333";
@@ -72,26 +73,38 @@
 
   function pick(row, candidates) {
     for (const key of candidates) {
-      if (Object.prototype.hasOwnProperty.call(row, key) && row[key] !== null && row[key] !== undefined) {
+      if (
+        Object.prototype.hasOwnProperty.call(row, key) &&
+        row[key] !== null &&
+        row[key] !== undefined
+      ) {
         return row[key];
       }
     }
-    // si existe pero está vacío, devolvemos vacío
     for (const key of candidates) {
       if (Object.prototype.hasOwnProperty.call(row, key)) return row[key] ?? "";
     }
     return "";
   }
 
-  function renderRows(tbody, rows) {
+  // ✅ Ahora soporta append
+  function renderRows(tbody, rows, opts = {}) {
+    const { append = false } = opts;
     if (!tbody) return;
 
     if (!rows || rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8">No hay registros para mostrar.</td></tr>`;
+      if (!append) {
+        tbody.innerHTML = `<tr><td colspan="8">No hay registros para mostrar.</td></tr>`;
+      }
       return;
     }
 
-    tbody.innerHTML = rows
+    // si estaba el mensaje "No hay registros..." y vamos a append, limpiamos
+    if (append && tbody.querySelector("td[colspan]")) {
+      tbody.innerHTML = "";
+    }
+
+    const html = rows
       .map((r) => {
         const nombre = pick(r, FIELD_CANDIDATES.nombre);
         const direccion = pick(r, FIELD_CANDIDATES.direccion);
@@ -116,6 +129,9 @@
         `;
       })
       .join("");
+
+    if (append) tbody.insertAdjacentHTML("beforeend", html);
+    else tbody.innerHTML = html;
   }
 
   // ====== Supabase helpers ======
@@ -143,27 +159,29 @@
     return lib.createClient(url, key);
   }
 
-  // Intenta ejecutar una consulta usando una lista de posibles columnas de nombre
-  async function fetchWithNameColumnFallback(sb, table, nameCols, term, limit) {
+  // ✅ Trae una página usando una columna de nombre candidata (con range)
+  async function fetchPageWithNameColumnFallback(sb, table, nameCols, term, from, to) {
     let lastError = null;
 
     for (const col of nameCols) {
-      let q = sb.from(table).select("*").order(col, { ascending: true }).limit(limit);
+      let q = sb
+        .from(table)
+        .select("*", { count: "exact" })
+        .order(col, { ascending: true })
+        .range(from, to);
 
       if (term) q = q.ilike(col, `%${term}%`);
 
-      const { data, error } = await q;
+      const { data, error, count } = await q;
 
       if (!error) {
-        return { data: data || [], nameColUsed: col, error: null };
+        return { data: data || [], count: count ?? null, nameColUsed: col, error: null };
       }
 
       lastError = error;
-      // si el error fue por columna inexistente, probamos la siguiente
-      // si fue por RLS/permisos, igual lo devolvemos al final
     }
 
-    return { data: [], nameColUsed: null, error: lastError };
+    return { data: [], count: null, nameColUsed: null, error: lastError };
   }
 
   // ====== Main ======
@@ -197,81 +215,139 @@
       return;
     }
 
-    // Columnas posibles para el nombre (para búsqueda)
+    // ✅ Botón "Cargar más" (se crea solo, sin tocar tu HTML)
+    let btnCargarMas = document.getElementById("btnCargarMas");
+    if (!btnCargarMas && estado && estado.parentElement) {
+      btnCargarMas = document.createElement("button");
+      btnCargarMas.id = "btnCargarMas";
+      btnCargarMas.type = "button";
+      btnCargarMas.textContent = "Cargar más";
+      btnCargarMas.style.marginTop = "10px";
+      btnCargarMas.style.display = "none";
+      // puedes cambiar clase si usas Bootstrap:
+      btnCargarMas.className = "btn btn-secondary";
+      estado.parentElement.appendChild(btnCargarMas);
+    }
+
     const possibleNameCols = FIELD_CANDIDATES.nombre;
 
-    let detectedNameCol = null;
+    function actualizarEstadoYBoton(loadedSoFar) {
+      const total = totalCount;
 
-    async function cargar(term = "") {
+      if (total !== null) {
+        setEstado(estado, `Mostrando ${loadedSoFar} de ${total}`, loadedSoFar ? "ok" : "info");
+        if (btnCargarMas) {
+          btnCargarMas.style.display = loadedSoFar < total ? "inline-block" : "none";
+        }
+      } else {
+        setEstado(estado, loadedSoFar ? `Mostrando: ${loadedSoFar}` : "Sin resultados.", loadedSoFar ? "ok" : "info");
+        if (btnCargarMas) btnCargarMas.style.display = "none";
+      }
+    }
+
+    async function cargarPagina(term, append = false) {
       const clean = (term || "").trim();
 
-      setEstado(estado, "Cargando...", "info");
+      const from = page * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
 
-      // Si ya detectamos la columna, usamos esa directo
+      // Si ya detectamos columna, usamos directo
       if (detectedNameCol) {
-        let q = sb.from(table).select("*").order(detectedNameCol, { ascending: true }).limit(DEFAULT_LIMIT);
+        let q = sb
+          .from(table)
+          .select("*", { count: "exact" })
+          .order(detectedNameCol, { ascending: true })
+          .range(from, to);
+
         if (clean) q = q.ilike(detectedNameCol, `%${clean}%`);
 
-        const { data, error } = await q;
+        const { data, error, count } = await q;
         if (error) {
           console.error(error);
           setEstado(estado, "Error al cargar datos: " + (error.message || "desconocido"), "error");
-          renderRows(tbody, []);
           return;
         }
 
-        setEstado(estado, data.length ? `Resultados: ${data.length}` : "Sin resultados.", data.length ? "ok" : "info");
-        renderRows(tbody, data);
+        if (totalCount === null) totalCount = count ?? null;
+
+        renderRows(tbody, data || [], { append });
+
+        page++;
+
+        const loaded = (page - 1) * PAGE_SIZE + (data ? data.length : 0);
+        // pero si ya había datos anteriores y estamos appending:
+        const loadedSoFar = append ? tbody.querySelectorAll("tr").length : (data ? data.length : 0);
+
+        actualizarEstadoYBoton(loadedSoFar);
         return;
       }
 
-      // Si NO está detectada, probamos varias columnas y nos quedamos con la que funcione
-      const { data, nameColUsed, error } = await fetchWithNameColumnFallback(
+      // Si NO está detectada, probamos candidatos y guardamos la que funcione
+      const { data, count, nameColUsed, error } = await fetchPageWithNameColumnFallback(
         sb,
         table,
         possibleNameCols,
         clean,
-        DEFAULT_LIMIT
+        from,
+        to
       );
 
       if (error) {
         console.error(error);
         setEstado(
           estado,
-          "Error al cargar datos. Si todo está bien, revisa RLS (policy SELECT) y el nombre de la tabla/columnas.",
+          "Error al cargar datos. Revisa RLS (policy SELECT) y el nombre de la tabla/columnas.",
           "error"
         );
-        renderRows(tbody, []);
         return;
       }
 
       detectedNameCol = nameColUsed || detectedNameCol;
+      if (totalCount === null) totalCount = count ?? null;
 
-      setEstado(estado, data.length ? `Resultados: ${data.length}` : "Sin resultados.", data.length ? "ok" : "info");
-      renderRows(tbody, data);
+      renderRows(tbody, data || [], { append });
+
+      page++;
+
+      const loadedSoFar = tbody.querySelectorAll("tr").length;
+      actualizarEstadoYBoton(loadedSoFar);
     }
 
-    // Primera carga (sin filtro)
-    await cargar("");
+    async function nuevaBusqueda(term = "") {
+      lastTerm = (term || "").trim();
+      page = 0;
+      totalCount = null;
 
-    // Botón buscar
-    if (btn) btn.addEventListener("click", () => cargar(input ? input.value : ""));
+      setEstado(estado, "Cargando...", "info");
+      renderRows(tbody, [], { append: false });
+      if (btnCargarMas) btnCargarMas.style.display = "none";
 
-    // Enter (submit del form)
+      await cargarPagina(lastTerm, false);
+    }
+
+    // ✅ Primera carga
+    await nuevaBusqueda("");
+
+    // Buscar
+    if (btn) btn.addEventListener("click", () => nuevaBusqueda(input ? input.value : ""));
+
+    // Enter (submit)
     if (form) {
       form.addEventListener("submit", (e) => {
         e.preventDefault();
-        cargar(input ? input.value : "");
+        nuevaBusqueda(input ? input.value : "");
       });
     }
 
-    // (Opcional) búsqueda en vivo con debounce (suave)
-    /*let t = null;
-    if (input) {
-      input.addEventListener("input", () => {
-        clearTimeout(t);
-        t = setTimeout(() => cargar(input.value), 250);
+    // ✅ Cargar más
+    if (btnCargarMas) {
+      btnCargarMas.addEventListener("click", () => {
+        // si ya no hay más, no hace nada
+        if (totalCount !== null && tbody.querySelectorAll("tr").length >= totalCount) return;
+
+        setEstado(estado, "Cargando más...", "info");
+        cargarPagina(lastTerm, true);
       });
-    }*/
+    }
   });
 })();
