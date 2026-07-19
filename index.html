@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <title>Listado de Practicas Profesionales</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Directorio público de empresas registradas para Prácticas Profesionales — Universidad Autónoma del Carmen.">
 
-  <link rel="stylesheet" href="./MenuPrincipal.css">
+  <link rel="stylesheet" href="./css/MenuPrincipal.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
 <body>
   <div class="banner-contenedor">
     <div class="banner">
-      <img src="./logo_.png" alt="Logo Izquierda" class="logo-izquierda">
-      <img src="./logo_admin_white.png" alt="Logo Derecha" class="logo-derecha">
+      <img src="./imagenes/logo_.png" alt="Logo Universidad Autónoma del Carmen" class="logo-izquierda">
+      <img src="./imagenes/logo_admin_white.png" alt="Logo Dirección General de Servicios al Estudiante" class="logo-derecha">
     </div>
     <div class="estandarte">PRACTICAS PROFESIONALES</div>
   </div>
 
   <!-- 🔹 Burbuja que se expande en menú -->
-  <div id="menu-expandible" class="menu-expandible">
+  <div id="menu-expandible" class="menu-expandible" aria-label="Menú de opciones" role="navigation">
     <div class="icono-menu">☰</div>
 
     <div class="contenido-menu">
@@ -29,14 +30,14 @@
           <p><strong>Accesos</strong></p>
           <p>Sistema Institucional de Seguimiento de Práctica Profesional</p>
           <a href="https://robalo.unacar.mx/sispprof/Default.aspx"
-             class="btn-amarillo" target="_blank">Click aquí</a>
+             class="btn-amarillo" target="_blank" rel="noopener noreferrer">Click aquí</a>
         </div>
 
         <div class="opcion" style="text-align: center;">
   <p><strong>Guía para realizar tus practicas profesionales</strong></p>
   <p>PDF</p>
 
-  <a href="./GUIAPP.pdf"
+  <a href="./docs/GUIAPP.pdf"
      class="btn-amarillo"
      download="GUIAPP.pdf">
     Descargar PDF
@@ -47,7 +48,7 @@
   <p><strong>Formato para el plan de trabajo</strong></p>
   <p>PDF</p>
 
-  <a href="./Plan de trabajo.docx"
+  <a href="./docs/Plan de trabajo.docx"
      class="btn-amarillo"
      download="Plan_de_trabajo.pdf">
     Descargar PDF
@@ -58,7 +59,7 @@
 
         <div class="opcion" style="text-align: center;">
           <p><strong>Acceso administrador</strong></p>
-          <a href="adm-loging.html" class="btn-amarillo">Ingresar</a>
+          <a href="./pages/admin-login.html" class="btn-amarillo">Ingresar</a>
         </div>
       </div>
     </div>
@@ -135,21 +136,21 @@
         >Buscar</button>
       </div>
 
-      <div id="estado-tabla" style="display:none; margin-top:6px; font-size:1.3rem;"></div>
+      <div id="estado-tabla" class="estado-tabla-txt" style="display:none; margin-top:6px; font-size:1.3rem;"></div>
     </form>
 
     <div class="table-responsive" style="margin-top: 10px;">
       <table class="table table-bordered table-hover" id="tabla-registros">
         <thead>
           <tr>
-            <th>NOMBRE</th>
-            <th>DIRECCION</th>
-            <th>TELEFONO</th>
-            <th>NOMBRE_CARTA</th>
-            <th>PUESTO_CARTA</th>
-            <th>CORREO_CONT</th>
-            <th>PROGRAMA EDUCATIVO SOLICITADO</th>
-            <th>GIRO DE LA EMPRESA</th>
+            <th scope="col">NOMBRE</th>
+            <th scope="col">DIRECCION</th>
+            <th scope="col">TELEFONO</th>
+            <th scope="col">NOMBRE_CARTA</th>
+            <th scope="col">PUESTO_CARTA</th>
+            <th scope="col">CORREO_CONT</th>
+            <th scope="col">PROGRAMA EDUCATIVO SOLICITADO</th>
+            <th scope="col">GIRO DE LA EMPRESA</th>
           </tr>
         </thead>
 
@@ -169,7 +170,7 @@
 
   <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js"></script>
-<script src="./empresas.js"></script>
+<script src="./js/supabase-config.js"></script>
+<script src="./js/empresas.js"></script>
 </body>
 </html>
