@@ -2,174 +2,264 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Listado de Practicas Profesionales</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prácticas Profesionales — Universidad Autónoma del Carmen</title>
+  <meta name="description" content="Listado de empresas disponibles para prácticas profesionales. Universidad Autónoma del Carmen, Dirección General de Servicios al Estudiante.">
 
-  <link rel="stylesheet" href="./MenuPrincipal.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- Favicon institucional -->
+  <link rel="icon" href="./assets/images/logo-dgse.png" type="image/png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assets/css/base.css">
+  <link rel="stylesheet" href="./assets/css/public.css">
 </head>
 
 <body>
-  <div class="banner-contenedor">
-    <div class="banner">
-      <img src="./logo_.png" alt="Logo Izquierda" class="logo-izquierda">
-      <img src="./logo_admin_white.png" alt="Logo Derecha" class="logo-derecha">
+  <!-- Saltar al contenido principal -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- ═══ ENCABEZADO ═══════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <div class="site-header__logos">
+        <img
+          src="./assets/images/logo-unacar.png"
+          alt="Universidad Autónoma del Carmen"
+          class="site-header__logo site-header__logo--left"
+          width="220" height="48" loading="eager">
+        <img
+          src="./assets/images/logo-dgse.png"
+          alt="Dirección General de Servicios al Estudiante"
+          class="site-header__logo site-header__logo--right"
+          width="72" height="48" loading="eager">
+      </div>
+      <span class="site-header__title" aria-hidden="true">Prácticas Profesionales</span>
     </div>
-    <div class="estandarte">PRACTICAS PROFESIONALES</div>
-  </div>
+  </header>
 
-  <!-- 🔹 Burbuja que se expande en menú -->
-  <div id="menu-expandible" class="menu-expandible">
-    <div class="icono-menu">☰</div>
+  <!-- ═══ CONTENIDO PRINCIPAL ══════════════════════════════════ -->
+  <main id="main-content" class="container-main">
 
-    <div class="contenido-menu">
-      <h3>Opciones del Sistema</h3>
-      <div class="botones-opciones">
-        <div class="opcion" style="text-align: center;">
-          <p><strong>Accesos</strong></p>
-          <p>Sistema Institucional de Seguimiento de Práctica Profesional</p>
-          <a href="https://robalo.unacar.mx/sispprof/Default.aspx"
-             class="btn-amarillo" target="_blank">Click aquí</a>
+    <!-- Panel principal con glassmorphism -->
+    <section class="glass-panel" aria-labelledby="section-title">
+
+      <!-- Controles de búsqueda y filtros -->
+      <div class="controls-section">
+        <div class="controls-header">
+          <h1 id="section-title">Empresas disponibles</h1>
+          <p>Directorio de empresas con plazas para prácticas profesionales</p>
         </div>
 
-        <div class="opcion" style="text-align: center;">
-  <p><strong>Guía para realizar tus practicas profesionales</strong></p>
-  <p>PDF</p>
+        <div class="filters-grid" role="search" aria-label="Buscar y filtrar empresas">
+          <!-- Búsqueda principal -->
+          <div class="search-row form-group" style="grid-column:1/-1">
+            <label for="search-input" class="form-label">Buscar empresa</label>
+            <div style="display:flex;gap:0">
+              <input
+                type="search"
+                id="search-input"
+                class="form-control"
+                placeholder="Nombre, programa educativo o giro…"
+                autocomplete="off"
+                aria-label="Buscar por nombre, programa educativo o giro">
+              <button type="button" id="search-btn" class="btn btn-accent"
+                      aria-label="Ejecutar búsqueda">Buscar</button>
+            </div>
+          </div>
 
-  <a href="./GUIAPP.pdf"
-     class="btn-amarillo"
-     download="GUIAPP.pdf">
-    Descargar PDF
-  </a>
-</div>
+          <!-- Filtro programa educativo -->
+          <div class="form-group">
+            <label for="filter-programa" class="form-label">Programa educativo</label>
+            <select id="filter-programa" class="form-control" aria-label="Filtrar por programa educativo">
+              <option value="">Todos los programas</option>
+            </select>
+          </div>
 
-<div class="opcion" style="text-align: center;">
-  <p><strong>Formato para el plan de trabajo</strong></p>
-  <p>PDF</p>
-
-  <a href="./Plan de trabajo.docx"
-     class="btn-amarillo"
-     download="Plan_de_trabajo.pdf">
-    Descargar PDF
-  </a>
-</div>
-
-
-
-        <div class="opcion" style="text-align: center;">
-          <p><strong>Acceso administrador</strong></p>
-          <a href="adm-loging.html" class="btn-amarillo">Ingresar</a>
+          <!-- Filtro giro -->
+          <div class="form-group">
+            <label for="filter-giro" class="form-label">Giro de la empresa</label>
+            <select id="filter-giro" class="form-control" aria-label="Filtrar por giro">
+              <option value="">Todos los giros</option>
+            </select>
+          </div>
         </div>
+
+        <!-- Acciones -->
+        <div class="controls-actions">
+          <button type="button" id="clear-btn" class="btn btn-outline"
+                  aria-label="Limpiar todos los filtros">
+            ✕ Limpiar filtros
+          </button>
+          <button type="button" id="retry-btn" class="btn btn-primary-dark" hidden
+                  aria-label="Reintentar carga de datos">
+            ↺ Reintentar
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de estado / contador -->
+      <div class="results-bar" role="status" aria-live="polite" aria-atomic="true">
+        <div id="results-count" class="results-count"></div>
+        <div class="sort-controls">
+          <label for="sort-select" class="visually-hidden">Ordenar por</label>
+          <select id="sort-select" class="form-control" aria-label="Ordenar por campo">
+            <option value="nombre">Nombre</option>
+            <option value="programa">Programa educativo</option>
+            <option value="giro">Giro</option>
+          </select>
+          <button type="button" id="sort-dir-btn" class="btn btn-primary-dark"
+                  style="min-width:40px;padding:0.25rem 0.5rem"
+                  aria-label="Orden ascendente">↑</button>
+        </div>
+      </div>
+
+      <!-- Mensaje de estado (carga, error) -->
+      <div id="table-status" class="alert alert--info" style="margin:0.75rem 1.5rem" hidden
+           role="status" aria-live="polite" aria-atomic="true"></div>
+
+      <!-- ─── Tabla escritorio ──────────────────────────────── -->
+      <div class="table-responsive-wrapper" id="table-wrapper">
+        <table class="companies-table" id="companies-table"
+               aria-label="Empresas disponibles para prácticas profesionales">
+          <caption>
+            Directorio de empresas — Universidad Autónoma del Carmen
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" data-col="nombre"    aria-sort="none">Empresa</th>
+              <th scope="col"                      aria-sort="none">Dirección</th>
+              <th scope="col"                      aria-sort="none">Teléfono</th>
+              <th scope="col"                      aria-sort="none">Persona de contacto</th>
+              <th scope="col"                      aria-sort="none">Puesto</th>
+              <th scope="col"                      aria-sort="none">Correo</th>
+              <th scope="col" data-col="programa"  aria-sort="none">Programa educativo</th>
+              <th scope="col" data-col="giro"      aria-sort="none">Giro</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--color-gray-400)">
+              Cargando datos…
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─── Tarjetas móvil ───────────────────────────────── -->
+      <div id="cards-list" class="cards-list" aria-label="Lista de empresas"
+           aria-live="polite" aria-atomic="false"></div>
+
+      <!-- Paginación -->
+      <nav class="pagination-bar" aria-label="Paginación">
+        <div class="page-size-selector">
+          <label for="page-size">Filas:</label>
+          <select id="page-size" class="form-control" aria-label="Registros por página">
+            <option value="10">10</option>
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <div id="pagination" class="pagination-controls" role="navigation"
+             aria-label="Páginas de resultados"></div>
+      </nav>
+    </section>
+  </main>
+
+  <!-- ═══ MENÚ FLOTANTE ════════════════════════════════════════ -->
+  <div class="floating-menu" role="navigation" aria-label="Opciones del sistema">
+    <button
+      type="button"
+      id="floating-menu-btn"
+      class="floating-menu__trigger"
+      aria-expanded="false"
+      aria-controls="floating-menu-panel"
+      aria-label="Abrir menú de opciones">
+      ☰
+    </button>
+    <div id="floating-menu-panel" class="floating-menu__panel" role="menu"
+         data-open="false">
+      <div class="floating-menu__title">Opciones del sistema</div>
+
+      <div class="menu-option">
+        <strong>Sistema institucional</strong>
+        <p>Seguimiento de Práctica Profesional</p>
+        <a href="https://robalo.unacar.mx/sispprof/Default.aspx"
+           class="btn btn-accent" target="_blank" rel="noopener noreferrer"
+           role="menuitem">
+          Ir al sistema ↗
+        </a>
+      </div>
+
+      <div class="menu-option">
+        <strong>Guía de prácticas profesionales</strong>
+        <p>Documento PDF con instrucciones</p>
+        <a href="./assets/documents/GUIAPP.pdf"
+           class="btn btn-outline" download="GUIAPP.pdf"
+           role="menuitem">
+          Descargar PDF
+        </a>
+      </div>
+
+      <div class="menu-option">
+        <strong>Plan de trabajo</strong>
+        <p>Formato Word</p>
+        <a href="./assets/documents/Plan-de-trabajo.docx"
+           class="btn btn-outline" download="Plan-de-trabajo.docx"
+           role="menuitem">
+          Descargar DOCX
+        </a>
+      </div>
+
+      <div class="menu-option">
+        <strong>Acceso administrativo</strong>
+        <a href="./pages/admin-login.html" class="btn btn-primary-dark"
+           role="menuitem">
+          Ingresar
+        </a>
       </div>
     </div>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const menu = document.getElementById("menu-expandible");
+  <!-- ═══ PIE DE PÁGINA ════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <strong>Universidad Autónoma del Carmen</strong><br>
+    Dirección General de Servicios al Estudiante · Unidad de Gestión Estudiantil
+  </footer>
 
-      menu.addEventListener("click", (e) => {
+  <!-- ═══ SCRIPTS ══════════════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="./assets/js/config/supabase-config.js" defer></script>
+  <script src="./assets/js/config/supabase-client.js" defer></script>
+  <script src="./assets/js/services/companies-service.js" defer></script>
+  <script src="./assets/js/public/companies-table.js" defer></script>
+
+  <!-- Menú flotante -->
+  <script>
+    (function () {
+      const btn   = document.getElementById("floating-menu-btn");
+      const panel = document.getElementById("floating-menu-panel");
+      if (!btn || !panel) return;
+
+      function toggle(open) {
+        panel.dataset.open = open;
+        btn.setAttribute("aria-expanded", open);
+        btn.textContent = open ? "✕" : "☰";
+        btn.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú de opciones");
+      }
+
+      btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        menu.classList.toggle("activo");
+        toggle(panel.dataset.open !== "true");
       });
 
       document.addEventListener("click", (e) => {
-        if (!menu.contains(e.target)) {
-          menu.classList.remove("activo");
-        }
+        if (!btn.contains(e.target) && !panel.contains(e.target)) toggle(false);
       });
 
-      menu.querySelectorAll("a").forEach(link => {
-        link.addEventListener("click", () => {
-          setTimeout(() => menu.classList.remove("activo"), 300);
-        });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") toggle(false);
       });
-    });
+    })();
   </script>
-
-  <!-- Contenedor principal -->
-  <div class="formulario-contenedor">
-    <h2 class="text-center">Listado de empresas</h2>
-
-    <form id="form-busqueda"
-          style="display:flex; flex-direction:column; gap:6px; min-width:300px; flex-grow:1; max-width:500px;">
-
-      <label for="busqueda" style="font-weight: 600; font-size: 1.6rem;">
-        Buscar empresa (por nombre):
-      </label>
-
-      <div style="display:flex; gap:8px; width:100%; align-items:stretch;">
-        <input
-          type="text"
-          id="busqueda"
-          class="form-control"
-          placeholder="Ej. ANCABE o UNACAR"
-          autocomplete="off"
-          style="
-            flex-grow: 1;
-            padding: 8px 12px;
-            font-size: 1.4rem;
-            border-radius: 6px 0 0 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            min-width: 180px;
-            height: 42px;
-          "
-        />
-
-        <button
-          type="button"
-          id="btnBuscar"
-          style="
-            padding: 8px 20px;
-            font-size: 1.4rem;
-            border-radius: 0 6px 6px 0;
-            border: 1px solid #007bff;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            height: 42px;
-            white-space: nowrap;
-            transition: background-color 0.3s ease;
-          "
-        >Buscar</button>
-      </div>
-
-      <div id="estado-tabla" style="display:none; margin-top:6px; font-size:1.3rem;"></div>
-    </form>
-
-    <div class="table-responsive" style="margin-top: 10px;">
-      <table class="table table-bordered table-hover" id="tabla-registros">
-        <thead>
-          <tr>
-            <th>NOMBRE</th>
-            <th>DIRECCION</th>
-            <th>TELEFONO</th>
-            <th>NOMBRE_CARTA</th>
-            <th>PUESTO_CARTA</th>
-            <th>CORREO_CONT</th>
-            <th>PROGRAMA EDUCATIVO SOLICITADO</th>
-            <th>GIRO DE LA EMPRESA</th>
-          </tr>
-        </thead>
-
-        <tbody id="contenido-tabla"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ✅ Banner inferior (AHORA sí va al final) -->
-  <footer class="banner-inferior">
-    <div class="banner-inferior-texto">
-      <div>Universidad Autónoma del Carmen</div>
-      <div>Dirección General de Servicios al Estudiante</div>
-      <div>Unidad de Gestión Estudiantil</div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js"></script>
-<script src="./empresas.js"></script>
 </body>
 </html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso Administrativo — Prácticas Profesionales</title>
+  <meta name="description" content="Inicio de sesión para administradores del sistema de prácticas profesionales.">
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" href="../assets/images/logo-dgse.png" type="image/png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/admin-login.css">
+</head>
+
+<body class="login-page">
+  <!-- Saltar al contenido principal -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- ═══ ENCABEZADO ═══════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <div class="site-header__logos">
+        <img
+          src="../assets/images/logo-unacar.png"
+          alt="Universidad Autónoma del Carmen"
+          class="site-header__logo site-header__logo--left"
+          width="220" height="48" loading="eager">
+        <img
+          src="../assets/images/logo-dgse.png"
+          alt="Dirección General de Servicios al Estudiante"
+          class="site-header__logo site-header__logo--right"
+          width="72" height="48" loading="eager">
+      </div>
+      <span class="site-header__title" aria-hidden="true">Prácticas Profesionales</span>
+    </div>
+  </header>
+
+  <!-- ═══ CONTENIDO PRINCIPAL ══════════════════════════════════ -->
+  <main id="main-content" class="login-main">
+    <div class="glass-panel login-card">
+
+      <!-- Ícono -->
+      <div class="login-card__icon" aria-hidden="true">🔐</div>
+
+      <h1>Acceso administrativo</h1>
+      <p class="login-card__subtitle">
+        Universidad Autónoma del Carmen · DGSE
+      </p>
+
+      <!-- Formulario -->
+      <form id="form-login" class="login-form" novalidate aria-label="Formulario de inicio de sesión">
+
+        <div class="form-group">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="correo@ejemplo.com"
+            autocomplete="email"
+            required
+            aria-required="true"
+            aria-describedby="email-hint">
+          <span id="email-hint" style="font-size:var(--text-xs);color:var(--color-gray-400)">
+            Usa tu correo institucional
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="input-with-toggle">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              autocomplete="current-password"
+              required
+              aria-required="true">
+            <button
+              type="button"
+              id="toggle-password"
+              class="toggle-password"
+              aria-label="Mostrar contraseña">👁</button>
+          </div>
+        </div>
+
+        <!-- Mensaje de estado (aria-live para lectores de pantalla) -->
+        <div id="login-message" class="alert" role="alert" hidden
+             aria-live="assertive" aria-atomic="true"></div>
+
+        <button type="submit" class="btn btn-accent">
+          Iniciar sesión
+        </button>
+      </form>
+
+      <!-- Volver a la página pública -->
+      <div class="login-form__footer">
+        <a href="../index.html">← Volver al directorio público</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ PIE DE PÁGINA ════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <strong>Universidad Autónoma del Carmen</strong><br>
+    Dirección General de Servicios al Estudiante
+  </footer>
+
+  <!-- ═══ SCRIPTS ══════════════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="../assets/js/config/supabase-config.js" defer></script>
+  <script src="../assets/js/config/supabase-client.js" defer></script>
+  <script src="../assets/js/services/auth-service.js" defer></script>
+  <script src="../assets/js/admin/admin-login.js" defer></script>
+</body>
+</html>
